@@ -5,6 +5,10 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.webkit.DownloadListener
+import android.widget.LinearLayout
+import android.widget.SimpleAdapter
+import android.widget.SimpleCursorAdapter
+import android.widget.TextView
 import com.google.gson.Gson
 import com.tuvy.tomosugi.ist.model.Coordinate
 import com.tuvy.tomosugi.ist.model.Distance
@@ -32,12 +36,14 @@ class MainActivity : AppCompatActivity() {
                             y = start.y + index*gapCoordinate.y) })
 
 
+        var distanceView = findViewById(R.id.distance) as TextView
         var cnt = 0
         Log.d("DataSet", "Gap: " + gapCoordinate.x.toString() + ", " + gapCoordinate.y.toString())
         Log.d("DataSet", "Stt: " + start.x.toString() + ", " + start.y.toString())
         while (cnt < dataset.size) {
 //            Log.d("DataSet", "Log: " + dataset[cnt].x.toString() + ", " + dataset[cnt].y.toString())
             Log.d("DataSet", "Log: " + getDistance(target, dataset[cnt]).first().toString())
+            distanceView.text = getDistance(target, dataset[cnt]).first().toString()
             cnt++
         }
         Log.d("DataSet", "End: " + target.x.toString() + ", " + target.y.toString())
