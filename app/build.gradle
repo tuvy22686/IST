@@ -29,8 +29,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile group: 'org.glassfish.tyrus', name: 'tyrus-container-grizzly-server', version: 1.13
-    compile group: 'org.glassfish.tyrus', name: 'tyrus-server', version: 1.13
     compile ('io.socket:socket.io-client:1.0.0') {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'

@@ -7,5 +7,5 @@ import com.google.gson.annotations.SerializedName
  */
 
 data class Distance(
-        @SerializedName("diff") val test: Double
+        @SerializedName("diff") val gap: Double
 )
