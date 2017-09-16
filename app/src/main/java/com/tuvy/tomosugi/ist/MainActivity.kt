@@ -46,8 +46,13 @@ class MainActivity : AppCompatActivity() {
         return target
     }
 
-//    fun distance(target: Coordinate, current: Coordinate): Double {
-//        val distance: Double
-//        distance =
-//    }
+    fun distance(target: Coordinate, current: Coordinate): Double {
+        val distance: Double
+        distance = Math.sqrt(square(target.x - current.x) - square(target.y - current.y))
+        return distance
+    }
+
+    fun square(td: Double): Double {
+        return (td * td)
+    }
 }
