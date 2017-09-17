@@ -15,10 +15,6 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 
 
-
-
-
-
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
