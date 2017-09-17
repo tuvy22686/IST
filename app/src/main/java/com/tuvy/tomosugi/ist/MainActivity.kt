@@ -5,10 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.webkit.DownloadListener
-import android.widget.LinearLayout
-import android.widget.SimpleAdapter
-import android.widget.SimpleCursorAdapter
-import android.widget.TextView
+import android.widget.*
 import com.google.gson.Gson
 import com.tuvy.tomosugi.ist.model.Coordinate
 import com.tuvy.tomosugi.ist.model.Distance
@@ -26,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // サンプルのデータセットの作成
         val target = targetCoordinate()
         val start = startCoordinate()
         val gapLevel = 10
@@ -33,46 +31,67 @@ class MainActivity : AppCompatActivity() {
                 x = Math.abs(target.x - start.x)/gapLevel,
                 y = Math.abs(target.y - start.y)/gapLevel)
         val dataset: List<Coordinate>
-                = List(10,
+                = List(gapLevel,
                 { index ->
                     Coordinate(x = start.x + index*gapCoordinate.x,
-                            y = start.y + index*gapCoordinate.y) })
-
-
-        var distanceView = findViewById(R.id.distance) as TextView
-        var cnt = 0
+                            y = start.y + index*gapCoordinate.y)
+                })
+        // データセット確認用
+        var index = 0
         Log.d("DataSet", "Gap: " + gapCoordinate.x.toString() + ", " + gapCoordinate.y.toString())
         Log.d("DataSet", "Stt: " + start.x.toString() + ", " + start.y.toString())
-        while (cnt < dataset.size) {
-//            Log.d("DataSet", "Log: " + dataset[cnt].x.toString() + ", " + dataset[cnt].y.toString())
-            Log.d("DataSet", "Log: " + getDistance(target, dataset[cnt]).first().toString())
-            distanceView.text = getDistance(target, dataset[cnt]).first().toString()
-            cnt++
+        while (index < dataset.size) {
+//            Log.d("DataSet", "Log: " + dataset[index].x.toString() + ", " + dataset[index].y.toString())
+            Log.d("DataSet", "Log: " + getDistance(target, dataset[index]).first().toString())
+            index++
         }
         Log.d("DataSet", "End: " + target.x.toString() + ", " + target.y.toString())
 
 
+        var distanceView = findViewById(R.id.distance) as TextView
+        var submitButton = findViewById(R.id.submitLocation) as Button
+        var disconnectButton = findViewById(R.id.disconnect) as Button
+
+        var cnt = 0
+
         Log.d("Main", "start")
+        // Web Socket初期化
         val socket: Socket = IO.socket("http://153.126.157.25:5000")
         socket
                 .on(Socket.EVENT_CONNECT, Emitter.Listener {
                     Log.d("Socket", "Connect")
-//                    while (cnt < dataset.size) {
-//                        val distance = Distance(getDistance(target, dataset[cnt]).first().toDouble())
-//                        val gson = Gson()
-//                        socket.emit("changeColor1", gson.toJson(distance))
-//                        cnt++
-//                    }
-                    val distance = Distance(diff = getDistance(target, dataset[0]).first().toDouble())
-                    val gson = Gson()
-                    socket.emit("changeColor1", gson.toJson(distance))
-                    Log.d("Socket", gson.toJson(distance))
-                    socket.disconnect()
+                })
+                .on(Socket.EVENT_CONNECT_ERROR, Emitter.Listener {
+                    Log.d("Socket", "ConnectError")
+                })
+                .on(Socket.EVENT_ERROR, Emitter.Listener {
+                    Log.d("Socket", "Error")
                 })
                 .on(Socket.EVENT_DISCONNECT, Emitter.Listener {
                     Log.d("Socket", "Disconnect")
                 })
         socket.connect()
+
+        submitButton.setOnClickListener {
+            val gson = Gson()
+            if (cnt >= dataset.size) {
+                socket.emit("changeColor1", gson.toJson(Distance(0.1)))
+                socket.disconnect()
+                submitButton.isEnabled = false
+            }
+            else {
+                Log.d("Socket", "Emit")
+                val distance = Distance(getDistance(target, dataset[cnt]).first().toDouble())
+                socket.emit("changeColor1", gson.toJson(distance))
+                distanceView.text = getDistance(target, dataset[cnt]).first().toString()
+            }
+            cnt++
+        }
+
+        disconnectButton.setOnClickListener {
+            socket.disconnect()
+        }
+
         Log.d("Main", "finish")
     }
 
