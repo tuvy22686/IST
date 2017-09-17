@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@android:id/background"
+        android:drawable="@drawable/house"
+        android:gravity="center_vertical|right">
+
+    </item>
+    <item
+        android:drawable="@drawable/company"
+        android:gravity="center_vertical|left">
+
+    </item>
+</layer-list>

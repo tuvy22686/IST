@@ -12,6 +12,9 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import android.widget.LinearLayout
+import android.widget.SeekBar
+
+
 
 
 
@@ -47,12 +50,15 @@ class MainActivity : AppCompatActivity() {
         Log.d("DataSet", "End: " + target.x.toString() + ", " + target.y.toString())
 
 
+        // View
         val distanceLayout = findViewById(R.id.parentDistance) as LinearLayout
-//        val distanceText = findViewById(R.id.distance) as TextView
         val submitButton = findViewById(R.id.submitLocation) as Button
         val connectButton = findViewById(R.id.connect) as Button
+        val seekBar = findViewById(R.id.seekbar) as SeekBar
 
+        // var
         var cnt = 0
+        var progress = 0
 
         Log.d("Main", "start")
         // Web Socket初期化
@@ -87,6 +93,7 @@ class MainActivity : AppCompatActivity() {
             cnt++
         }
 
+        // Button
         submitButton.isEnabled = false
         submitButton.setOnClickListener {
             if (cnt >= dataset.size) {
@@ -102,9 +109,35 @@ class MainActivity : AppCompatActivity() {
                 socket.emit("changeColor1", gson.toJson(distance))
                 val distanceText = findViewById(R.id.distance) as TextView
                 distanceText.text = getDistance(target, dataset[cnt]).first().toInt().toString()
+                progress = getDistance(target, dataset[cnt]).first().toInt() / 7
+                Log.d("Progress", progress.toString())
+                seekBar.setProgress(100 - progress)
             }
             cnt++
         }
+
+        // SeekBar
+        // 初期値
+//        seekBar.setProgress(0)
+        // 最大値
+        seekBar.setMax(100)
+        seekBar.isEnabled = false
+        seekBar.setOnSeekBarChangeListener(
+                object : SeekBar.OnSeekBarChangeListener {
+                    //ツマミがドラッグされると呼ばれる
+                    override fun onProgressChanged(seekBar: SeekBar,
+                                                   progress: Int, fromUser: Boolean) {
+//                        val text = progress.toString() + " %"
+//                        textView.setText(text)
+                    }
+
+                    //ツマミがタッチされた時に呼ばれる
+                    override fun onStartTrackingTouch(seekBar: SeekBar) {}
+
+                    //ツマミがリリースされた時に呼ばれる
+                    override fun onStopTrackingTouch(seekBar: SeekBar) {}
+
+                })
 
         Log.d("Main", "finish")
     }
