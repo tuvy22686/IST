@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val distanceLayout = findViewById(R.id.parentDistance) as LinearLayout
-        val distanceText = findViewById(R.id.distance) as TextView
+//        val distanceText = findViewById(R.id.distance) as TextView
         val submitButton = findViewById(R.id.submitLocation) as Button
         val connectButton = findViewById(R.id.connect) as Button
 
@@ -71,15 +71,24 @@ class MainActivity : AppCompatActivity() {
                     Log.d("Socket", "Disconnect")
                 })
 
+        val gson = Gson()
         connectButton.setOnClickListener {
             socket.connect()
             submitButton.isEnabled = true
             connectButton.isEnabled = false
+            distanceLayout.removeAllViews()
+            layoutInflater.inflate(R.layout.distance_view, distanceLayout)
+
+            Log.d("Socket", "Emit")
+            val distance = Distance(getDistance(target, dataset[cnt]).first().toDouble())
+            socket.emit("changeColor1", gson.toJson(distance))
+            val distanceText = findViewById(R.id.distance) as TextView
+            distanceText.text = getDistance(target, dataset[cnt]).first().toInt().toString()
+            cnt++
         }
 
         submitButton.isEnabled = false
         submitButton.setOnClickListener {
-            val gson = Gson()
             if (cnt >= dataset.size) {
                 socket.emit("changeColor1", gson.toJson(Distance(0.1)))
                 socket.disconnect()
@@ -91,6 +100,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("Socket", "Emit")
                 val distance = Distance(getDistance(target, dataset[cnt]).first().toDouble())
                 socket.emit("changeColor1", gson.toJson(distance))
+                val distanceText = findViewById(R.id.distance) as TextView
                 distanceText.text = getDistance(target, dataset[cnt]).first().toInt().toString()
             }
             cnt++
