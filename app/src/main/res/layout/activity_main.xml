@@ -16,17 +16,18 @@
         <!--app:layout_constraintTop_toTopOf="parent" />-->
 
     <LinearLayout
-        android:layout_width="368dp"
-        android:layout_height="495dp"
+        android:layout_width="455dp"
+        android:layout_height="660dp"
+        android:gravity="center"
         android:orientation="vertical"
+        tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp"
-        tools:ignore="MissingConstraints">
+        tools:layout_editor_absoluteY="8dp">
 
         <LinearLayout
             android:id="@+id/parentDistance"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="100dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -34,8 +35,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:textSize="30dp"
                 android:text="あと"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText,SpUsage" />
 
             <TextView
                 android:id="@+id/distance"
@@ -43,14 +45,17 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="hoge"
-                tools:ignore="HardcodedText" />
+                android:textColor="#FF6347"
+                android:textSize="70dp"
+                tools:ignore="HardcodedText,SpUsage" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="メートル"
-                tools:ignore="HardcodedText" />
+                android:textSize="30dp"
+                tools:ignore="HardcodedText,SpUsage" />
         </LinearLayout>
 
         <Button
@@ -58,8 +63,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="現在の座標を送信"
-            tools:ignore="HardcodedText" />
+            android:text="送信"
+            android:textSize="25dp"
+            tools:ignore="HardcodedText,SpUsage" />
 
         <Button
             android:id="@+id/disconnect"
@@ -67,7 +73,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="切断"
-            tools:ignore="HardcodedText" />
+            android:textSize="25dp"
+            tools:ignore="HardcodedText,SpUsage" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
