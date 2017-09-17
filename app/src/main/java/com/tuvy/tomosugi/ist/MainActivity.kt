@@ -15,9 +15,12 @@ import com.tuvy.tomosugi.ist.model.Distance
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
+
+    var timer = Timer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,20 +53,26 @@ class MainActivity : AppCompatActivity() {
 
 
         Log.d("Main", "start")
-//        val socket: Socket = IO.socket("http://153.126.157.25:5000")
-//        socket
-//                .on(Socket.EVENT_CONNECT, Emitter.Listener {
-//                    Log.d("Socket", "Connect")
-//                    val distance = Distance(gap = 10.0)
-//                    val gson = Gson()
-//                    socket.emit("changeColor1", gson.toJson(distance))
-//                    Log.d("Socket", gson.toJson(distance))
-//                    socket.disconnect()
-//                })
-//                .on(Socket.EVENT_DISCONNECT, Emitter.Listener {
-//                    Log.d("Socket", "Disconnect")
-//                })
-//        socket.connect()
+        val socket: Socket = IO.socket("http://153.126.157.25:5000")
+        socket
+                .on(Socket.EVENT_CONNECT, Emitter.Listener {
+                    Log.d("Socket", "Connect")
+//                    while (cnt < dataset.size) {
+//                        val distance = Distance(getDistance(target, dataset[cnt]).first().toDouble())
+//                        val gson = Gson()
+//                        socket.emit("changeColor1", gson.toJson(distance))
+//                        cnt++
+//                    }
+                    val distance = Distance(diff = getDistance(target, dataset[0]).first().toDouble())
+                    val gson = Gson()
+                    socket.emit("changeColor1", gson.toJson(distance))
+                    Log.d("Socket", gson.toJson(distance))
+                    socket.disconnect()
+                })
+                .on(Socket.EVENT_DISCONNECT, Emitter.Listener {
+                    Log.d("Socket", "Disconnect")
+                })
+        socket.connect()
         Log.d("Main", "finish")
     }
 
