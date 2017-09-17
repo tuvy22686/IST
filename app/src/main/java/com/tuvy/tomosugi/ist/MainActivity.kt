@@ -13,6 +13,9 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import java.util.*
+import android.widget.LinearLayout
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -48,9 +51,10 @@ class MainActivity : AppCompatActivity() {
         Log.d("DataSet", "End: " + target.x.toString() + ", " + target.y.toString())
 
 
-        var distanceView = findViewById(R.id.distance) as TextView
+        var distanceLayout = findViewById(R.id.parentDistance) as LinearLayout
+        var distanceText = findViewById(R.id.distance) as TextView
         var submitButton = findViewById(R.id.submitLocation) as Button
-        var disconnectButton = findViewById(R.id.disconnect) as Button
+        var connectButton = findViewById(R.id.connect) as Button
 
         var cnt = 0
 
@@ -70,26 +74,30 @@ class MainActivity : AppCompatActivity() {
                 .on(Socket.EVENT_DISCONNECT, Emitter.Listener {
                     Log.d("Socket", "Disconnect")
                 })
-        socket.connect()
 
+        connectButton.setOnClickListener {
+            socket.connect()
+            submitButton.isEnabled = true
+            connectButton.isEnabled = false
+        }
+
+        submitButton.isEnabled = false
         submitButton.setOnClickListener {
             val gson = Gson()
             if (cnt >= dataset.size) {
                 socket.emit("changeColor1", gson.toJson(Distance(0.1)))
                 socket.disconnect()
                 submitButton.isEnabled = false
+                distanceLayout.removeAllViews()
+                layoutInflater.inflate(R.layout.arrive_view, distanceLayout)
             }
             else {
                 Log.d("Socket", "Emit")
                 val distance = Distance(getDistance(target, dataset[cnt]).first().toDouble())
                 socket.emit("changeColor1", gson.toJson(distance))
-                distanceView.text = getDistance(target, dataset[cnt]).first().toString()
+                distanceText.text = getDistance(target, dataset[cnt]).first().toInt().toString()
             }
             cnt++
-        }
-
-        disconnectButton.setOnClickListener {
-            socket.disconnect()
         }
 
         Log.d("Main", "finish")
