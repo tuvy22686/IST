@@ -4,7 +4,6 @@ import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.webkit.DownloadListener
 import android.widget.*
 import com.google.gson.Gson
 import com.tuvy.tomosugi.ist.model.Coordinate
@@ -12,15 +11,12 @@ import com.tuvy.tomosugi.ist.model.Distance
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
-import java.util.*
 import android.widget.LinearLayout
 
 
 
 
 class MainActivity : AppCompatActivity() {
-
-    var timer = Timer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +47,10 @@ class MainActivity : AppCompatActivity() {
         Log.d("DataSet", "End: " + target.x.toString() + ", " + target.y.toString())
 
 
-        var distanceLayout = findViewById(R.id.parentDistance) as LinearLayout
-        var distanceText = findViewById(R.id.distance) as TextView
-        var submitButton = findViewById(R.id.submitLocation) as Button
-        var connectButton = findViewById(R.id.connect) as Button
+        val distanceLayout = findViewById(R.id.parentDistance) as LinearLayout
+        val distanceText = findViewById(R.id.distance) as TextView
+        val submitButton = findViewById(R.id.submitLocation) as Button
+        val connectButton = findViewById(R.id.connect) as Button
 
         var cnt = 0
 
@@ -123,12 +119,7 @@ class MainActivity : AppCompatActivity() {
 
     fun getDistance(target: Coordinate, current: Coordinate): FloatArray {
         var results: FloatArray = kotlin.FloatArray(3)
-//        distance = Math.sqrt(getSquare(target.x - current.x) - getSquare(target.y - current.y))
         Location.distanceBetween(target.x, target.y, current.x, current.y, results)
         return results
-    }
-
-    fun getSquare(td: Double): Double {
-        return (td * td)
     }
 }
